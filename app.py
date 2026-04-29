@@ -53,26 +53,50 @@ try:
     # =========================
     st.subheader("Filters")
 
-    col1, col2, col3 = st.columns(3)
+    # 👉 Single row with proper spacing
+    col1, col2, col3, col4 = st.columns([2, 2, 2, 2])
 
     # Weight filter
     min_w, max_w = int(df["Total Weight"].min()), int(df["Total Weight"].max())
-    weight_range = col1.slider("Total Weight", min_w, max_w, (min_w, max_w))
+    weight_range = col1.slider(
+        "Total Weight",
+        min_w,
+        max_w,
+        (min_w, max_w),
+        step=100
+    )
+
+    # Orders filter
+    min_o, max_o = int(df["Total Order"].min()), int(df["Total Order"].max())
+    order_range = col2.slider(
+        "Total Orders",
+        min_o,
+        max_o,
+        (min_o, max_o),
+        step=10
+    )
 
     # Category filter
     categories = ["All"] + sorted(df["final_category"].dropna().unique().tolist())
-    selected_cat = col2.selectbox("Category", categories)
+    selected_cat = col3.selectbox("Category", categories)
 
-    # Sub-category filter
-    sub_categories = ["All"] + sorted(df["final_sub_category"].dropna().unique().tolist())
-    selected_subcat = col3.selectbox("Sub Category", sub_categories)
+    # Sub-category filter (dependent)
+    if selected_cat != "All":
+        sub_df = df[df["final_category"] == selected_cat]
+    else:
+        sub_df = df
+
+    sub_categories = ["All"] + sorted(sub_df["final_sub_category"].dropna().unique().tolist())
+    selected_subcat = col4.selectbox("Sub Category", sub_categories)
 
     # =========================
     # APPLY FILTERS
     # =========================
     filtered_df = df[
-        (df["Total Weight"] >= weight_range[0]) &
-        (df["Total Weight"] <= weight_range[1])
+    (df["Total Weight"] >= weight_range[0]) &
+    (df["Total Weight"] <= weight_range[1]) &
+    (df["Total Order"] >= order_range[0]) &
+    (df["Total Order"] <= order_range[1])
     ]
 
     if selected_cat != "All":
