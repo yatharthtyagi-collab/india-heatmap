@@ -71,31 +71,26 @@ try:
     # =========================
     st.subheader("Filters")
 
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    col1, col2, col3, col4, col5 = st.columns(5)
 
     # Weight
     min_w, max_w = int(df["Total Weight"].min()), int(df["Total Weight"].max())
     weight_min = col1.number_input("Weight Min", value=min_w)
     weight_max = col1.number_input("Weight Max", value=max_w)
 
-    # Orders
-    min_o, max_o = int(df["Total Order"].min()), int(df["Total Order"].max())
-    order_min = col2.number_input("Orders Min", value=min_o)
-    order_max = col2.number_input("Orders Max", value=max_o)
-
-    # Vendor Orders
+    # Vendor Orders (KEEP THIS)
     min_v, max_v = int(df["Total Order"].min()), int(df["Total Order"].max())
-    vendor_min = col3.number_input("Vendor Orders Min", value=min_v)
-    vendor_max = col3.number_input("Vendor Orders Max", value=max_v)
+    vendor_min = col2.number_input("Vendor Orders Min", value=min_v)
+    vendor_max = col2.number_input("Vendor Orders Max", value=max_v)
 
     # Avg Weight / Order
     min_avg, max_avg = int(df["Avg_Weight_per_order"].min()), int(df["Avg_Weight_per_order"].max())
-    avg_min = col4.number_input("Avg Wt/Order Min(Kg)", value=min_avg)
-    avg_max = col4.number_input("Avg Wt/Order Max(Kg)", value=max_avg)
+    avg_min = col3.number_input("Avg Wt/Order Min", value=min_avg)
+    avg_max = col3.number_input("Avg Wt/Order Max", value=max_avg)
 
     # Category
     categories = ["All"] + sorted(df["final_category"].dropna().unique().tolist())
-    selected_cat = col5.selectbox("Category", categories)
+    selected_cat = col4.selectbox("Category", categories)
 
     # Sub-category
     if selected_cat != "All":
@@ -104,14 +99,14 @@ try:
         sub_df = df
 
     sub_categories = ["All"] + sorted(sub_df["final_sub_category"].dropna().unique().tolist())
-    selected_subcat = col6.selectbox("Sub Category", sub_categories)
+    selected_subcat = col5.selectbox("Sub Category", sub_categories)
 
     st.markdown("---")
 
     # =========================
     # VALIDATION
     # =========================
-    if (weight_min > weight_max or order_min > order_max or
+    if (weight_min > weight_max or 
         vendor_min > vendor_max or avg_min > avg_max):
         st.error("Min values cannot be greater than Max values")
         st.stop()
@@ -164,9 +159,8 @@ try:
     # =========================
     filtered_city = city_data[
         (city_data["Total Weight"] >= weight_min) &
-        (city_data["Total Weight"] <= weight_max) &
-        (city_data["Total Order"] >= order_min) &
-        (city_data["Total Order"] <= order_max)
+        (city_data["Total Weight"] <= weight_max) 
+
     ]
 
     if filtered_city.empty:
