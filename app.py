@@ -85,8 +85,8 @@ try:
 
     # Avg Weight / Order
     min_avg, max_avg = int(df["Avg_Weight_per_order"].min()), int(df["Avg_Weight_per_order"].max())
-    avg_min = col3.number_input("Avg Wt/Order Min", value=min_avg)
-    avg_max = col3.number_input("Avg Wt/Order Max", value=max_avg)
+    avg_min = col3.number_input("Avg Wt/Order Min(Kg)", value=min_avg)
+    avg_max = col3.number_input("Avg Wt/Order Max(Kg)", value=max_avg)
 
     # Category
     categories = ["All"] + sorted(df["final_category"].dropna().unique().tolist())
